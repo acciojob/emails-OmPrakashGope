@@ -1,30 +1,38 @@
 package com.driver;
 
-import org.apache.commons.lang3.tuple.Pair;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
 
-public class Workspace extends Gmail{
+public class Main {
+    public static void main(String[] args) throws ParseException {
+        Email email = new Email("accio@gmail.com");
+        email.changePassword("Accio@123", "V12@");
+        email.changePassword("Acio@123", "V12@v");
+        email.changePassword("Accio@123", "V12@v123");
 
-    private ArrayList<Meeting> calendar; // Stores all the meetings
+        Gmail gmail = new Gmail("accio@gmail.com", 3);
+        gmail.receiveMail(new SimpleDateFormat("dd/MM/yyyy").parse("21/12/2022"), "Tushar", "Assignment Completed?");
+        gmail.receiveMail(new SimpleDateFormat("dd/MM/yyyy").parse("22/12/2022"), "Tushar", "We are running out of time.");
+        gmail.receiveMail(new SimpleDateFormat("dd/MM/yyyy").parse("22/12/2022"), "Abhishek", "Assignment to be uploaded on database.");
+        gmail.receiveMail(new SimpleDateFormat("dd/MM/yyyy").parse("23/12/2022"), "Tushar", "Everything looks good.");
 
-    public Workspace(String emailId) {
-        // The inboxCapacity is equal to the maximum value an integer can store.
+        System.out.println("Total " + gmail.getInboxSize() + " mails in inbox.");
+        System.out.println("There are " + gmail.findMailsBetweenDates(new SimpleDateFormat("dd/MM/yyyy").parse("21/12/2022"), new SimpleDateFormat("dd/MM/yyyy").parse("22/12/2022")) + " mails between given dates!");
+        gmail.deleteMail("Everything looks good.");
+        System.out.println("The latest message is :" + gmail.findLatestMessage());
+        gmail.deleteMail("Assignment to be uploaded on database.");
+        System.out.println("There are " + gmail.getTrashSize() + " mails in the trash.");
+        gmail.emptyTrash();
+        System.out.println("There are " + gmail.getTrashSize() + " mails in the trash.");
 
-    }
+        Workspace workspace = new Workspace("accio@gmail.com");
+        System.out.println("Inbox capacity is " + workspace.getInboxCapacity() + " in workspace.");
 
-    public void addMeeting(Meeting meeting){
-        //add the meeting to calendar
-
-    }
-
-    public int findMaxMeetings(){
-        // find the maximum number of meetings you can attend
-        // 1. At a particular time, you can be present in at most one meeting
-        // 2. If you want to attend a meeting, you must join it at its start time and leave at end time.
-        // Example: If a meeting ends at 10:00 am, you cannot attend another meeting starting at 10:00 am
-
+        workspace.addMeeting(new Meeting(LocalTime.parse("17:40"), LocalTime.parse("18:40")));
+        workspace.addMeeting(new Meeting(LocalTime.parse("13:30"), LocalTime.parse("18:00")));
+        workspace.addMeeting(new Meeting(LocalTime.parse("18:20"), LocalTime.parse("19:10")));
+        workspace.addMeeting(new Meeting(LocalTime.parse("19:50"), LocalTime.parse("21:05")));
+        System.out.println("Maximum meetings you can attend in a day is " + workspace.findMaxMeetings());
     }
 }
